@@ -1,3 +1,3 @@
-Distribute Pattern Matching on Metadata Graphs
+Distribute Pattern Matching on Large Metadata Graphs
 
 We are in the process of code anonymization ...
