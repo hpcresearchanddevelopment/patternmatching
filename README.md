@@ -4,7 +4,7 @@ Distribute Pattern Matching on Large Metadata Graphs
 
 git clone git@github.com:hpcresearchanddevelopment/patternmatching.git
 
-srun -N1 --ntasks-per-node=4 --distribution=block ./src/generate_rmat -s 18 -p 1 -f 1 -o /dev/shm/rmat -b /urs/graph/rmat
+srun -N1 --ntasks-per-node=4 --distribution=block ./src/generate_rmat -s 21 -p 1 -f 1 -o /dev/shm/rmat -b /urs/graph/rmat
 
 cd  patternmatching/build/quartz/
 
