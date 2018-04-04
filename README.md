@@ -1,17 +1,16 @@
-Distribute Pattern Matching on Large Metadata Graphs
-<br/>
-Here, we present an example of searching a pattern in a R-MAT generated graph using our program. The code is developed on top of HavoqGT.
-<br/>
+<p>Distribute Pattern Matching on Large Metadata Graphs</p>
+
+<p>Here, we present an example of searching a pattern in a R-MAT generated graph using our program. The code is developed on top of HavoqGT.</p>
+
 <p>Clone (with SSH) the code from git@github.com:hpcresearchanddevelopment/patternmatching.git
 git clone git@github.com:hpcresearchanddevelopment/patternmatching.git</p>
-<br/>
+
 <p>You will require the latest releases of OpenMPI or MAVPICH2 and the Boost library (some Boost releases have bugs, e.g., 1.58, the code works fine with 1.57) to run HavoqGT. The code has only been tested on latest generation of Linux distributions. Once you have checked out the code, make sure you are on the master branch.</p>
-<br/>
-Go to the directory, build/quartz/
+
+<p>Go to the directory, build/quartz/
 Setup CMake environment by running the following script: 
-<br/>
 ./scripts/quartz/do\_cmake.sh
-(Make necessary adjustments to the script for CMake to work within your environment.)
+(Make necessary adjustments to the script for CMake to work within your environment.)</p>
 
 <img src="https://github.com/hpcresearchanddevelopment/patternmatching/blob/master/examples/doc/tree_0011.png" width="200" height="200">
 
