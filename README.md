@@ -21,13 +21,18 @@ make generate\_rmat</p>
 
 <p>Create a directory, e.g., /usr/graph/, to store the generated graph. Assuming you are in the Slurm environment, run the following command to generate a R-MAT graph:
 <br/>
-srun -N1 --ntasks-per-node=4 --distribution=block ./src/generate\_rmat -s 18 -p 1 -f 1 -o /dev/shm/rmat -b /urs/graph/rmat
+srun -N1 --ntasks-per-node=4 --distribution=block ./src/generate\_rmat -s 21 -p 1 -f 1 -o /dev/shm/rmat -b /urs/graph/rmat
 </p>
 
-<p>This will create a graph with four partitions, to be run of four MPI processes. Note that this is a Scale 18 graph. (Notice the parameter for the -s flag). The mmap/binary graph file will be store in /usr/graph/</p>
+<p>This will create a graph with four partitions, to be run of four MPI processes. Note that this is a Scale 21 graph. (Notice the parameter for the -s flag). The mmap/binary graph file will be store in /usr/graph/</p>
 
 <div align="center"><img src="https://github.com/hpcresearchanddevelopment/patternmatching/blob/master/examples/doc/tree_0011.png" width="200" height="200"></div>
 
+<p>We use degree information to create numeric vertex labels, computed using the formula. ceil(log\_2(d(v\_i)+1)). Here, d(v\_i) is the degree of a vertex v\_i.</p>
+
+<p>The input pattern is available in the following dircetory: patternmatching/examples/rmat\_log2\_tree\_pattern/0/</p>
+
+<p>The program requires a predefined directory straucture to output results: patternmatching/examples/results/0/ </p> 
 
 srun -N1 --ntasks-per-node=4 --distribution=block ./src/generate_rmat -s 21 -p 1 -f 1 -o /dev/shm/rmat -b /urs/graph/rmat
 
