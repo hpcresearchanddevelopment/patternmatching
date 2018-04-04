@@ -8,6 +8,8 @@ git clone git@github.com:hpcresearchanddevelopment/patternmatching.git</p>
 
 <p>You will require the latest releases of OpenMPI or MAVPICH2 and the Boost library (some Boost releases have bugs, e.g., 1.58, the code works fine with 1.57) to run HavoqGT. The code has only been tested on latest generation of Linux distributions. Once you have checked out the code, make sure you are on the master branch.</p>
 
+cd  patternmatching/build/quartz/
+
 <p>Go to the directory, build/quartz/
 Setup CMake environment by running the following script: 
 <br/>
@@ -30,12 +32,21 @@ srun -N1 --ntasks-per-node=4 --distribution=block ./src/generate\_rmat -s 21 -p 
 
 <p>We use degree information to create numeric vertex labels, computed using the formula. ceil(log\_2(d(v\_i)+1)). Here, d(v\_i) is the degree of a vertex v\_i.</p>
 
-<p>The input pattern is available in the following dircetory: patternmatching/examples/rmat\_log2\_tree\_pattern/0/</p>
+<p>The input pattern is available in the following dircetory: patternmatching/examples/rmat\_log2\_tree\_pattern/</p>
 
-<p>The program requires a predefined directory straucture to output results: patternmatching/examples/results/0/ </p> 
+<p>The program requires a predefined directory structure to output results: patternmatching/examples/results/ </p>
 
-srun -N1 --ntasks-per-node=4 --distribution=block ./src/generate_rmat -s 21 -p 1 -f 1 -o /dev/shm/rmat -b /urs/graph/rmat
+<p>Next, use the following command to search the pattern stored in patternmatching/examples/rmat\_log2\_tree\_pattern/.
+<br/>
+<br/>
+Note that we do not need to provide vertex labels for the Tree pattern as we will use labels based on vertex degree and the program will generate labels when no input label is provided, i.e., the -l flag is not set.
+<br/>
+srun -N1 --ntasks-per-node=4 --distribution=block ./src/ run\_pattern\_matching\_beta -i /dev/shm/rmat -b /usr/graph/rmat -p ../../examples/rmat\_log2\_tree\_pattern/ -o ../../examples/results/
+</p>
 
-cd  patternmatching/build/quartz/
+<p>The program logs status information to the standard output so you know the current state of the execution.</p>
 
-srun -N1 --ntasks-per-node=4 --distribution=block ./src/ run_pattern_matching_beta -i /dev/shm/rmat -b /usr/graph/rmat -p ../../examples/rmat_log2_tree_pattern/ -o ../../examples/results/
+<p>See the instructions on the readme page regarding how to interpret the results and retrieve the pruned graph. You will find scripts (written in python) that will help you to parse the result files.</p>
+
+<p>Also, instructions on how to enumerate a pattern on the pruned graph are available on the readme page.</p>
+
