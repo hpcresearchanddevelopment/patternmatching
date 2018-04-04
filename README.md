@@ -26,7 +26,7 @@ srun -N1 --ntasks-per-node=4 --distribution=block ./src/generate\_rmat -s 18 -p 
 
 <p>This will create a graph with four partitions, to be run of four MPI processes. Note that this is a Scale 18 graph. (Notice the parameter for the -s flag). The mmap/binary graph file will be store in /usr/graph/</p>
 
-</div><img src="https://github.com/hpcresearchanddevelopment/patternmatching/blob/master/examples/doc/tree_0011.png" width="200" height="200"></div>
+<div><center><img src="https://github.com/hpcresearchanddevelopment/patternmatching/blob/master/examples/doc/tree_0011.png" width="200" height="200"></center></div>
 
 
 srun -N1 --ntasks-per-node=4 --distribution=block ./src/generate_rmat -s 21 -p 1 -f 1 -o /dev/shm/rmat -b /urs/graph/rmat
