@@ -46,7 +46,17 @@ srun -N1 --ntasks-per-node=4 --distribution=block ./src/ run\_pattern\_matching\
 
 <p>The program logs status information to the standard output so you know the current state of the execution.</p>
 
-<p>See the instructions on the readme page regarding how to interpret the results and retrieve the pruned graph. You will find scripts (written in python) that will help you to parse the result files.</p>
+<p>See the instructions on the readme page regarding how to interpret the results and retrieve the pruned graph. You will find scripts (written in python) that will help you to parse the result files.
+The directory /examples/results/0/all\_ranks\_active\_vertices\_count/ contains the number of active vertices at the end of each iteration. However the results are distributed, 
+The last entry in the file indicate the final number of active vertiices. (Same for edges as well). 
 
-<p>Also, instructions on how to enumerate a pattern on the pruned graph are available on the readme page.</p>
+To accumuate the results 
+
+python ../../examples/scripts/total\_active\_count.py ../../examples/results/0/all\_ranks\_active\_vertices\_count/ > vertices\_count
+
+The file ../../examples/results/0/result\_superstep contains the timing information
+
+</p>
+
+<p>Also, instructions on how to enumerate a pattern on the pruned graph are available on the readme page. The last step in the execution actually enumerate the pattern in the background graph.</p>
 
