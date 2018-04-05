@@ -58,6 +58,14 @@ The file ../../examples/results/0/result\_superstep contains the timing informat
 
 </p>
 
+<h4>Results</h4>
+<p>Next, we discuss how to collect and interpret the results and retrieve the pruned graph. You will find (python) scripts in /examples/scripts/ that should help you to parse the result files.</p>
+<p>The files in the (result) directory /examples/results/0/all_ranks_active_vertices_count/ contain the number of active vertices at the end of each iteration. However, the results are distributed among multiple files (one file for each MPI rank). The script /examples/scripts/total_active_count.py produces the global statistics (to the standard output) from the distributed output file.</p>
+<p>python ../../examples/scripts/total_active_count.py ../../examples/results/0/all_ranks_active_vertices_count/ > /tmp/vertices_count</p>
+<p>The last entry in the output file (e.g, /tmp/vertices_count) indicates the final number of active vertices. (You can use the same script to obtain edge statistics, output to the directory examples/results/0/all_ranks_active_edges_count/).</p>
+<p>The file, examples/results/0/result_superstep ,contains the global runtime, time (in seconds) to complete each LCC and NLCC iteration. Sum of time to complete all iteration is the time to complete a search.</p>
+<p>The files in the (result) directory /examples/results/0/all_ranks_active_vertices/ contain the number of active vertices after search/pruning has been completed. The results can be easily merged in a single file: cat ../../examples/results/0/all_ranks_active_vertices/* > /tmp/vertices. Following the same procedure, you can collect the list of final active edges (from the output in /examples/results/0/all_ranks_active_edges/).</p>
+
 <h4>Enumeration</h4>
 <p>For the Tree pattern in this example, the last step in the execution enumerates the pattern in the pruned graph. The input for enumeration is the last entry in the file examples/rmat_log2_tree_pattern/0/pattern_non_local_constraint. Here, the same NLCC code walks the full template with work aggregation turned off.</p>
 
