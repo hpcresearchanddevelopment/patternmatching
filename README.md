@@ -1,33 +1,21 @@
-<p>Distribute Pattern Matching on Large Metadata Graphs</p>
-
+<h4>Distribute Pattern Matching on Large Metadata Graphs</h4>
 <p>Here, we present an example of searching a pattern in a R-MAT generated graph using our program. The code is developed on top of HavoqGT.</p>
-
-<p>Clone (with SSH) the code from git@github.com:hpcresearchanddevelopment/patternmatching.git:
-<br/>
-git clone git@github.com:hpcresearchanddevelopment/patternmatching.git</p>
-
+<p>Clone (with SSH) the code from git@github.com:hpcresearchanddevelopment/patternmatching.git:</p>
+<p>git clone git@github.com:hpcresearchanddevelopment/patternmatching.git</p>
 <p>You will require the latest releases of OpenMPI or MAVPICH2 and the Boost library (some Boost releases have bugs, e.g., 1.58, the code works fine with 1.57) to run HavoqGT. The code has only been tested on latest generation of Linux distributions. Once you have checked out the code, make sure you are on the master branch.</p>
+<p>cd  patternmatching/build/quartz/<p>
+<p>Go to the directory, build/quartz/. Setup CMake environment by running the following script:</p> 
+<p>./scripts/quartz/do_cmake.sh</p>
+<p>(Make necessary adjustments to the script for CMake to work within your environment.)</p>
 
-cd  patternmatching/build/quartz/
-
-<p>Go to the directory, build/quartz/
-Setup CMake environment by running the following script: 
-<br/>
-./scripts/quartz/do\_cmake.sh
-<br/>
-(Make necessary adjustments to the script for CMake to work within your environment.)</p>
-
-<p>The next step is to generate a graph in HavoqGT format. Go to the directory, build/quartz/ and build the R-MAT generator:
-<br/>
-make generate\_rmat</p>
-
+<h4>Graph Generation</h4>
+<p>The first step is to generate a graph in HavoqGT format. Go to the directory, build/quartz/ and build the R-MAT generator:</p>
+<p>make generate_rmat</p>
 <p>Create a directory, e.g., /usr/graph/, to store the generated graph. Assuming you are in the Slurm environment, run the following command to generate a R-MAT graph:
 <br/>
-srun -N1 --ntasks-per-node=4 --distribution=block ./src/generate\_rmat -s 21 -p 1 -f 1 -o /dev/shm/rmat -b /urs/graph/rmat
+srun -N1 --ntasks-per-node=4 --distribution=block ./src/generate_rmat -s 21 -p 1 -f 1 -o /dev/shm/rmat -b /urs/graph/rmat
 </p>
-
-<p>This will create a graph with four partitions, to be run of four MPI processes. Note that this is a Scale 21 graph. (Notice the parameter for the -s flag). The mmap/binary graph file will be store in /usr/graph/</p>
-
+<p>This will create a graph with four partitions, to be run on four MPI processes. This is a Scale 21 graph (notice the parameter for the -s flag). The mmap/binary graph file will be stored in /usr/graph/</p>
 
 <h4>Input Pattern</h4>
 <p>We will search the following Tree pattern on the graph we just created. The numeric values on each vertex is the label of the respective vertex.</p>
@@ -49,7 +37,7 @@ srun -N1 --ntasks-per-node=4 --distribution=block ./src/generate\_rmat -s 21 -p 
 <p>The last entry in the output file (e.g, /tmp/vertices_count) indicates the final number of active vertices. (You can use the same script to obtain edge statistics, output to the directory examples/results/0/all_ranks_active_edges_count/).</p>
 <p>The file, examples/results/0/result_superstep ,contains the global runtime, time (in seconds) to complete each LCC and NLCC iteration. Sum of time to complete all iteration is the time to complete a search.</p>
 <p>The files in the (result) directory /examples/results/0/all_ranks_active_vertices/ contain the number of active vertices after search/pruning has been completed. The results can be easily merged in a single file:</p> 
-<p>cat ../../examples/results/0/all_ranks_active_vertices/* > /tmp/vertices.</p> 
+<p>cat ../../examples/results/0/all_ranks_active_vertices/* > /tmp/vertices</p> 
 <p>Following the same procedure, you can collect the list of final active edges (from the output in /examples/results/0/all_ranks_active_edges/).</p>
 
 <h4>Enumeration</h4>
