@@ -34,29 +34,17 @@ srun -N1 --ntasks-per-node=4 --distribution=block ./src/generate\_rmat -s 21 -p 
 
 <p>The input pattern is available in the following dircetory: patternmatching/examples/rmat\_log2\_tree\_pattern/</p>
 
-<p>The program requires a predefined directory structure to output results: patternmatching/examples/results/ </p>
 
-<p>Next, use the following command to search the pattern stored in patternmatching/examples/rmat\_log2\_tree\_pattern/.
-<br/>
-<br/>
-Note that we do not need to provide vertex labels for the Tree pattern as we will use labels based on vertex degree and the program will generate labels when no input label is provided, i.e., the -l flag is not set.
-<br/>
-srun -N1 --ntasks-per-node=4 --distribution=block ./src/ run\_pattern\_matching\_beta -i /dev/shm/rmat -b /usr/graph/rmat -p ../../examples/rmat\_log2\_tree\_pattern/ -o ../../examples/results/
-</p>
+<h4>Input Pattern</h4>
 
+
+<h4>Searching a Pattern</h4>
+<p>First, build the pattern matching executable:</p>
+<p>make run\_pattern\_matching\_beta</p> 
+<p>Next, use the following command to search the pattern stored in patternmatching/examples/rmat\_log2\_tree\_pattern/.</p> 
+<p>Note that we do not need to provide vertex labels for the Tree pattern as we will use labels based on vertex degree and the program will generate degree-based labels when no input label is provided, i.e., the -l flag is not set. The program requires a specific directory structure to output results. An example is available here: patternmatching/examples/results/</p> 
+<p>srun -N1 --ntasks-per-node=4 --distribution=block ./src/ run\_pattern\_matching\_beta -i /dev/shm/rmat -b /usr/graph/rmat -p ../../examples/rmat\_log2\_tree\_pattern/ -o ../../examples/results/</p>
 <p>The program logs status information to the standard output so you know the current state of the execution.</p>
-
-<p>See the instructions on the readme page regarding how to interpret the results and retrieve the pruned graph. You will find scripts (written in python) that will help you to parse the result files.
-The directory /examples/results/0/all\_ranks\_active\_vertices\_count/ contains the number of active vertices at the end of each iteration. However the results are distributed, 
-The last entry in the file indicate the final number of active vertiices. (Same for edges as well). 
-
-To accumuate the results 
-
-python ../../examples/scripts/total\_active\_count.py ../../examples/results/0/all\_ranks\_active\_vertices\_count/ > vertices\_count
-
-The file ../../examples/results/0/result\_superstep contains the timing information
-
-</p>
 
 <h4>Results</h4>
 <p>Next, we discuss how to collect and interpret the results and retrieve the pruned graph. You will find (python) scripts in /examples/scripts/ that should help you to parse the result files.</p>
@@ -64,7 +52,9 @@ The file ../../examples/results/0/result\_superstep contains the timing informat
 <p>python ../../examples/scripts/total_active_count.py ../../examples/results/0/all_ranks_active_vertices_count/ > /tmp/vertices_count</p>
 <p>The last entry in the output file (e.g, /tmp/vertices_count) indicates the final number of active vertices. (You can use the same script to obtain edge statistics, output to the directory examples/results/0/all_ranks_active_edges_count/).</p>
 <p>The file, examples/results/0/result_superstep ,contains the global runtime, time (in seconds) to complete each LCC and NLCC iteration. Sum of time to complete all iteration is the time to complete a search.</p>
-<p>The files in the (result) directory /examples/results/0/all_ranks_active_vertices/ contain the number of active vertices after search/pruning has been completed. The results can be easily merged in a single file: cat ../../examples/results/0/all_ranks_active_vertices/* > /tmp/vertices. Following the same procedure, you can collect the list of final active edges (from the output in /examples/results/0/all_ranks_active_edges/).</p>
+<p>The files in the (result) directory /examples/results/0/all_ranks_active_vertices/ contain the number of active vertices after search/pruning has been completed. The results can be easily merged in a single file:</p> 
+<p>cat ../../examples/results/0/all_ranks_active_vertices/* > /tmp/vertices.</p> 
+<p>Following the same procedure, you can collect the list of final active edges (from the output in /examples/results/0/all_ranks_active_edges/).</p>
 
 <h4>Enumeration</h4>
 <p>For the Tree pattern in this example, the last step in the execution enumerates the pattern in the pruned graph. The input for enumeration is the last entry in the file examples/rmat_log2_tree_pattern/0/pattern_non_local_constraint. Here, the same NLCC code walks the full template with work aggregation turned off.</p>
