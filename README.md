@@ -58,5 +58,6 @@ The file ../../examples/results/0/result\_superstep contains the timing informat
 
 </p>
 
-<p>Also, instructions on how to enumerate a pattern on the pruned graph are available on the readme page. The last step in the execution actually enumerate the pattern in the background graph.</p>
+<h2>Enumeration</h2>
+<p>For the Tree pattern in this example, the last step in the execution enumerates the pattern in the pruned graph. The input for enumeration is the last entry in the file examples/rmat_log2_tree_pattern/0/pattern_non_local_constraint. Here, the same NLCC code walks the full template with work aggregation turned off.</p>
 
