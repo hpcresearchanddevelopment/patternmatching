@@ -28,22 +28,18 @@ srun -N1 --ntasks-per-node=4 --distribution=block ./src/generate\_rmat -s 21 -p 
 
 <p>This will create a graph with four partitions, to be run of four MPI processes. Note that this is a Scale 21 graph. (Notice the parameter for the -s flag). The mmap/binary graph file will be store in /usr/graph/</p>
 
-<div align="center"><img src="https://github.com/hpcresearchanddevelopment/patternmatching/blob/master/examples/doc/tree_0011.png" width="200" height="200"></div>
-
-<p>We use degree information to create numeric vertex labels, computed using the formula. ceil(log\_2(d(v\_i)+1)). Here, d(v\_i) is the degree of a vertex v\_i.</p>
-
-<p>The input pattern is available in the following dircetory: patternmatching/examples/rmat\_log2\_tree\_pattern/</p>
-
 
 <h4>Input Pattern</h4>
-
+<p>We will search the following Tree pattern on the graph we just created. The numeric values on each vertex is the label of the respective vertex.</p>
+<div align="center"><img src="https://github.com/hpcresearchanddevelopment/patternmatching/blob/master/examples/doc/tree_0011.png" width="200" height="200"></div>
+<p>We use degree information to create numeric vertex labels, computed using the formula ceil(log_2(d(v_i)+1)). Here, d(v_i) is the degree of a vertex v_i. The input pattern is available in the following dircetory: patternmatching/examples/rmat_log2_tree_pattern/</p>
 
 <h4>Searching a Pattern</h4>
 <p>First, build the pattern matching executable:</p>
-<p>make run\_pattern\_matching\_beta</p> 
-<p>Next, use the following command to search the pattern stored in patternmatching/examples/rmat\_log2\_tree\_pattern/.</p> 
+<p>make run_pattern_matching_beta</p> 
+<p>Next, use the following command to search the pattern stored in patternmatching/examples/rmat_log2_tree_pattern/.</p> 
 <p>Note that we do not need to provide vertex labels for the Tree pattern as we will use labels based on vertex degree and the program will generate degree-based labels when no input label is provided, i.e., the -l flag is not set. The program requires a specific directory structure to output results. An example is available here: patternmatching/examples/results/</p> 
-<p>srun -N1 --ntasks-per-node=4 --distribution=block ./src/ run\_pattern\_matching\_beta -i /dev/shm/rmat -b /usr/graph/rmat -p ../../examples/rmat\_log2\_tree\_pattern/ -o ../../examples/results/</p>
+<p>srun -N1 --ntasks-per-node=4 --distribution=block ./src/ run_pattern_matching_beta -i /dev/shm/rmat -b /usr/graph/rmat -p ../../examples/rmat_log2_tree_pattern/ -o ../../examples/results/</p>
 <p>The program logs status information to the standard output so you know the current state of the execution.</p>
 
 <h4>Results</h4>
