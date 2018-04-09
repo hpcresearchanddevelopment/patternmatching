@@ -471,7 +471,7 @@ int main(int argc, char** argv) {
   //pattern_util<VertexData, Vertex> ptrn_util_two(pattern_input_filename, true); 
   //pattern_util<VertexData, Vertex> ptrn_util_two(pattern_input_filename + "_nem", true);
   typedef pattern_util<VertexData, Vertex> PatternUtilities;
-  PatternUtilities ptrn_util_two(pattern_input_filename + "_nem", 
+  PatternUtilities ptrn_util_two(pattern_input_filename + "_nlc", 
     pattern_input_filename + "_non_local_constraint", true, true);
   //PatternUtilities ptrn_util_two(pattern_input_filename + "_nem", pattern_input_filename + "_tds", true, true);
   //pattern_util<VertexData, Vertex> ptrn_util_two(pattern_input_filename + "_pc", true);
@@ -501,7 +501,7 @@ int main(int argc, char** argv) {
   uint64_t message_count = 0; 
 
   // result
-  std::string itr_result_filename = result_dir + "/" + std::to_string(ps) + "/result_itr";
+  std::string itr_result_filename = result_dir + "/" + std::to_string(ps) + "/result_iteration";
   std::ofstream itr_result_file(itr_result_filename, std::ofstream::out);
 
   std::string step_result_filename = result_dir + "/" + std::to_string(ps) + "/result_step";
@@ -531,7 +531,7 @@ int main(int argc, char** argv) {
   //std::ofstream paths_result_file(paths_result_filename, std::ofstream::out);
 
   std::string message_count_result_filename = result_dir + "/" +
-    std::to_string(ps) + "/all_ranks_messages/message_count_" + std::to_string(mpi_rank);
+    std::to_string(ps) + "/all_ranks_messages/messages_" + std::to_string(mpi_rank);
   std::ofstream message_count_result_file(message_count_result_filename, std::ofstream::out);
 
   MPI_Barrier(MPI_COMM_WORLD);
@@ -711,7 +711,8 @@ int main(int argc, char** argv) {
 
   // result
   std::string paths_result_filename = result_dir + "/" +
-    std::to_string(ps) + "/all_ranks_paths/paths_" + 
+    //std::to_string(ps) + "/all_ranks_paths/paths_" + 
+    std::to_string(ps) + "/all_ranks_subgraphs/subgraphs_" +
     std::to_string(pl) + "_" + std::to_string(mpi_rank);
     std::ofstream paths_result_file(paths_result_filename, std::ofstream::out);
 
