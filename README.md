@@ -25,7 +25,7 @@
 <p>First, build the pattern matching executable:</p>
 <p>make run_pattern_matching_beta</p> 
 <p>Next, use the following command to search the pattern stored in patternmatching/examples/rmat_log2_tree_pattern/.</p> 
-<p>(Note that we do not need to provide vertex labels for the Tree pattern as we will use labels based on vertex degree and the program will generate degree-based labels when no input label is provided, i.e., the -l flag is not set. The program requires a specific directory structure to output results. An example is available here, patternmatching/examples/results/.)</p> 
+<p>(Note that we do not need to provide vertex labels for the Tree pattern as we will use labels based on vertex degree and the program will generate degree-based labels when no input label is provided, i.e., the -v flag is not set. The program requires a specific directory structure to output results. An example is available here, patternmatching/examples/results/.)</p> 
 <p>srun -N1 --ntasks-per-node=4 --distribution=block ./src/run_pattern_matching_beta -i /dev/shm/rmat -b /usr/graph/rmat -p ../../examples/rmat_log2_tree_pattern/ -o ../../examples/results/</p>
 <p>The program logs status information to the standard output so you know the current state of the execution.</p>
 
