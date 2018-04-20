@@ -1034,7 +1034,7 @@ void token_passing_pattern_matching(TGraph* g, VertexMetadata& vertex_metadata,
   struct VisitorCompare {
     public:
       // WDC_C_4#8  
-      /*Boolean aggregation_steps [8][8] = {
+      Boolean aggregation_steps [8][8] = {
         {0, 0, 0, 0, 0, 0, 0, 0},
         {1, 0, 0, 0, 0, 0, 0, 0},
         {1, 1, 0, 0, 0, 0, 0, 0},
@@ -1043,10 +1043,10 @@ void token_passing_pattern_matching(TGraph* g, VertexMetadata& vertex_metadata,
         {1, 1, 0, 1, 0, 0, 0, 0},
         {1, 1, 0, 0, 0, 0, 0, 0},
         {0, 0, 0, 0, 0, 0, 0, 0}
-      };*/
+      };
 
       // WDC_C_4#11
-      Boolean aggregation_steps [9][9] = {
+      /*Boolean aggregation_steps [9][9] = {
         {0, 0, 0, 0, 0, 0, 0, 0, 0},
         {1, 0, 0, 0, 0, 0, 0, 0, 0},
         {1, 1, 0, 0, 0, 0, 0, 0, 0},
@@ -1056,7 +1056,7 @@ void token_passing_pattern_matching(TGraph* g, VertexMetadata& vertex_metadata,
         {1, 0, 1, 1, 0, 0, 0, 0, 0},
         {1, 0, 1, 0, 0, 0, 0, 0, 0},
         {0, 0, 0, 0, 0, 0, 0, 0, 0}
-      };
+      };*/
 
       bool operator()(const visitor_type& v1, const visitor_type& v2) const {
 /*        if (v1.itr_count != v2.itr_count) {
@@ -1111,7 +1111,8 @@ void token_passing_pattern_matching(TGraph* g, VertexMetadata& vertex_metadata,
 
         //assert(next_itr_count <= v1.max_itr_count); 
 	
-        for (size_t i = 0; i < 9; i++) { 	
+       for (size_t i = 0; i < 8; i++) {  
+        //for (size_t i = 0; i < 9; i++) { 	
           if (aggregation_steps[next_itr_count][i] == (Boolean)1) {
             none = false;   
             if (v1.visited_vertices[i] != v2.visited_vertices[i]) {            
@@ -1302,8 +1303,9 @@ void token_passing_pattern_matching(TGraph* g, VertexMetadata& vertex_metadata,
   //if (pl >= 14) {
   // WDC_patterns_12_tree_C_2, C_4 - pruned graph
   //if (pl >= 0) {
-  if (pl == 11) {
-    max_ranks_per_itr = 256; //mpi_size; //128;
+  //if (pl == 11) {
+  if (pl == 8) {
+    max_ranks_per_itr = mpi_size; //mpi_size; //128;
     /*if (mpi_size / 36 == 64) {
       max_ranks_per_itr = 1; // 1; in SC paper
     }
