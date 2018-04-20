@@ -1063,6 +1063,10 @@ void token_passing_pattern_matching(TGraph* g, VertexMetadata& vertex_metadata,
           return false;     
         }*/    
 
+        if (v1.vertex_label != v2.vertex_label) {
+          return false;
+        } 
+
         if (v1.itr_count != v2.itr_count) {
           return false;  
         }
@@ -1289,7 +1293,7 @@ void token_passing_pattern_matching(TGraph* g, VertexMetadata& vertex_metadata,
   // WDC_patterns_12_tree_C_2, C_4 - pruned graph
   //if (pl >= 0) {
   if (pl == 11) {
-    max_ranks_per_itr = 64; //mpi_size; //128;
+    max_ranks_per_itr = mpi_size; //128;
     /*if (mpi_size / 36 == 64) {
       max_ranks_per_itr = 1; // 1; in SC paper
     }
