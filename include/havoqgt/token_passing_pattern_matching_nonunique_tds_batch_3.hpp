@@ -2,6 +2,7 @@
 #define HAVOQGT_TOKEN_PASSING_PATTERN_MATCHING_NONUNIQUE_TDS_BATCH_3_HPP_INCLUDED
 
 #include <array>
+#include <chrono>
 #include <deque>
 #include <limits>
 #include <unordered_set>	
@@ -525,13 +526,15 @@ public:
           // std::cout << "Token source: " << g.locator_to_label(vertex) << " " << std::get<12>(alg_data)[vertex].size() << std::endl; // Test
           for (auto v : std::get<12>(alg_data)[vertex]) {
             tppm_visitor_tds new_visitor(neighbour, vertex, g.label_to_locator(v), 
-              g.locator_to_label(neighbour), // vertex_label
+              //g.locator_to_label(neighbour), // vertex_label
+              v, // vertex_label 
               visited_vertices, 0, pattern_cycle_length, 0, pattern_indices[0], pattern_valid_cycle, true, false);
             vis_queue->queue_visitor(new_visitor);
           }        
         } else { 
           tppm_visitor_tds new_visitor(neighbour, vertex, vertex, 
-            g.locator_to_label(neighbour), // vertex_label
+            //g.locator_to_label(neighbour), // vertex_label
+            g.locator_to_label(vertex), // vertex_label
             visited_vertices, 0, pattern_cycle_length, 0, pattern_indices[0], pattern_valid_cycle, true, false);
           vis_queue->queue_visitor(new_visitor);
         } 
@@ -877,7 +880,8 @@ public:
         // TODO: aggregation ? 
         
         tppm_visitor_tds new_visitor(neighbour, vertex, target_vertex, 
-          g.locator_to_label(neighbour), // vertex_label
+          //g.locator_to_label(neighbour), // vertex_label
+          g.locator_to_label(target_vertex), // vertex_label
           visited_vertices, 
           new_itr_count, max_itr_count, source_index_pattern_indices, vertex_pattern_index, 
           expect_target_vertex); 
@@ -1181,6 +1185,12 @@ void token_passing_pattern_matching(TGraph* g, VertexMetadata& vertex_metadata,
     public:
       size_t operator()(const visitor_type& visitor) const {        
         return visitor.vertex_label;
+        //return visitor.vertex_label + (uint64_t)MPI_Wtime();
+        //std::chrono::time_point<std::chrono::system_clock> now = 
+        //  std::chrono::system_clock::now();
+        //auto duration = now.time_since_epoch();
+        //auto microseconds = std::chrono::duration_cast<std::chrono::microseconds>(duration).count();
+        //return visitor.vertex_label + (uint64_t)microseconds;
         //return 0;
       }
   };
@@ -1293,7 +1303,7 @@ void token_passing_pattern_matching(TGraph* g, VertexMetadata& vertex_metadata,
   // WDC_patterns_12_tree_C_2, C_4 - pruned graph
   //if (pl >= 0) {
   if (pl == 11) {
-    max_ranks_per_itr = mpi_size; //128;
+    max_ranks_per_itr = 256; //mpi_size; //128;
     /*if (mpi_size / 36 == 64) {
       max_ranks_per_itr = 1; // 1; in SC paper
     }
