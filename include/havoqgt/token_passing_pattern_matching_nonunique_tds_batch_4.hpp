@@ -1,5 +1,5 @@
-#ifndef HAVOQGT_TOKEN_PASSING_PATTERN_MATCHING_NONUNIQUE_TDS_BATCH_3_HPP_INCLUDED
-#define HAVOQGT_TOKEN_PASSING_PATTERN_MATCHING_NONUNIQUE_TDS_BATCH_3_HPP_INCLUDED
+#ifndef HAVOQGT_TOKEN_PASSING_PATTERN_MATCHING_NONUNIQUE_TDS_BATCH_4_HPP_INCLUDED
+#define HAVOQGT_TOKEN_PASSING_PATTERN_MATCHING_NONUNIQUE_TDS_BATCH_4_HPP_INCLUDED
 
 #include <array>
 #include <chrono>
@@ -11,7 +11,7 @@
 #include <havoqgt/detail/visitor_priority_queue.hpp>
 
 // TODO: improve
-static bool enable_token_aggregation = false;//true;
+static bool enable_token_aggregation = false; //true;
 static bool enable_vertex_token_source_cache = false;
 static bool path_checking_filter = false; //true;
 static uint64_t visitor_count;
@@ -93,8 +93,8 @@ public:
     vertex_locator _parent,  
     vertex_locator _target_vertex,
     Vertex _vertex_label,
-    // Vertex _target_vertex_label,   
-    // uint64_t _sequence_number,  
+    Vertex _target_vertex_label,   
+    uint64_t _sequence_number,  
     VertexLocatorArrayStatic& _visited_vertices, 
     size_t _itr_count, 
     size_t _max_itr_count, 
@@ -111,8 +111,8 @@ public:
     parent(_parent),
     target_vertex(_target_vertex),
     vertex_label(_vertex_label),
-    //target_vertex_label(_target_vertex_label),
-    //sequence_number(_sequence_number),   
+    target_vertex_label(_target_vertex_label),
+    sequence_number(_sequence_number),   
     itr_count(_itr_count), 
     max_itr_count(_max_itr_count), 
     expect_target_vertex(_expect_target_vertex), 
@@ -156,7 +156,10 @@ public:
     // std::get<16>(alg_data); // pattern_selected_vertices
     // std::get<17>(alg_data); // paths_result_file
     // std::get<18>(alg_data); // pattern_enumeration_indices 
-    // std::get<19>(alg_data); // visitor_set   
+    // std::get<19>(alg_data); // visitor_set  
+    // std::get<20>(alg_data); // available
+    // std::get<21>(alg_data); // vertex_sequence_number
+    // std::get<22>(alg_data); // pattern_aggregation_steps 
     
     // auto source_index_pattern_indices = 0;   
 
@@ -451,7 +454,10 @@ public:
     // std::get<17>(alg_data); // paths_result_file
     // std::get<18>(alg_data); // pattern_enumeration_indices 
     // std::get<19>(alg_data); // visitor_set 
-
+    // std::get<20>(alg_data); // available
+    // std::get<21>(alg_data); // vertex_sequence_number
+    // std::get<22>(alg_data); // pattern_aggregation_steps
+    
     if (!do_pass_token && is_init_step && itr_count == 0) {
       // init tokens from the source vertex    
           
@@ -527,7 +533,9 @@ public:
           for (auto v : std::get<12>(alg_data)[vertex]) {
             tppm_visitor_tds new_visitor(neighbour, vertex, g.label_to_locator(v), 
               //g.locator_to_label(neighbour), // vertex_label
-              v, // vertex_label 
+              v, // vertex_label
+              v, // token_label 
+              0, // sequence_number   
               visited_vertices, 0, pattern_cycle_length, 0, pattern_indices[0], pattern_valid_cycle, true, false);
             vis_queue->queue_visitor(new_visitor);
           }        
@@ -535,6 +543,8 @@ public:
           tppm_visitor_tds new_visitor(neighbour, vertex, vertex, 
             //g.locator_to_label(neighbour), // vertex_label
             g.locator_to_label(vertex), // vertex_label
+            g.locator_to_label(vertex), // token_label
+            std::get<21>(alg_data)[vertex], //0, // sequence_number
             visited_vertices, 0, pattern_cycle_length, 0, pattern_indices[0], pattern_valid_cycle, true, false);
           vis_queue->queue_visitor(new_visitor);
         } 
@@ -687,6 +697,8 @@ public:
             // send ack_success to the token source so it could update its state
             tppm_visitor_tds new_visitor(target_vertex, vertex, target_vertex, 
               g.locator_to_label(target_vertex), // vertex_label
+              g.locator_to_label(vertex), //g.locator_to_label(target_vertex), // token_label
+              std::get<21>(alg_data)[vertex], //sequence_number 
               visited_vertices, itr_count, max_itr_count,
               source_index_pattern_indices, 0, expect_target_vertex, false, false, true);
             vis_queue->queue_visitor(new_visitor); 
@@ -877,11 +889,36 @@ public:
         //  << vertex_pattern_index << " " << new_itr_count << " forwarding to " 
         //  << g.locator_to_label(neighbour) << std::endl; // Test
 
-        // TODO: aggregation ? 
-        
+        // TODO: aggregation ?
+
+        auto new_token_label = target_vertex_label;
+        auto new_sequence_number = sequence_number;
+        //auto temp_enumeration = false; // Test
+        auto enable_new_token_label = std::get<22>(alg_data)[next_pattern_index];   
+
+        auto has_unique_template_vertex = 
+          (vertex_template_vertices.count() == 1 ? true : false);
+
+        /*if (enable_new_token_label && !expect_target_vertex && 
+          !has_unique_template_vertex && path_checking_filter) {
+          new_token_label = g.locator_to_label(vertex),
+          new_sequence_number = std::get<21>(alg_data)[vertex]++; 
+        }  
+        if (enable_new_token_label && !path_checking_filter) {
+          new_token_label = g.locator_to_label(vertex),
+          new_sequence_number = std::get<21>(alg_data)[vertex]++;          
+        }*/  
+ 
+        if (enable_new_token_label) {
+          new_token_label = g.locator_to_label(vertex),
+          new_sequence_number = std::get<21>(alg_data)[vertex]++;
+        }        
+ 
         tppm_visitor_tds new_visitor(neighbour, vertex, target_vertex, 
           //g.locator_to_label(neighbour), // vertex_label
           g.locator_to_label(target_vertex), // vertex_label
+          new_token_label, // token_label
+          new_sequence_number, //sequence_number 
           visited_vertices, 
           new_itr_count, max_itr_count, source_index_pattern_indices, vertex_pattern_index, 
           expect_target_vertex); 
@@ -948,7 +985,7 @@ public:
 
   Vertex vertex_label;
   Vertex target_vertex_label; // TODO: this label will be updated at the points where no caching happens // token_label?
-  //uint64_t sequence_number;
+  uint64_t sequence_number;
 
   size_t itr_count; // TODO: change type // Important : itr_count of the parent // TODO: remove 
   size_t max_itr_count; // equal to diameter - 1 of the pattern as itr_count is initialized to 0 // TODO: change type
@@ -1001,12 +1038,13 @@ void token_passing_pattern_matching(TGraph* g, VertexMetadata& vertex_metadata,
 //--  auto pattern_seleted_edges_tp = std::get<5>(ptrn_util_two.input_patterns[pl]); // boolean 
   auto pattern_selected_vertices = std::get<5>(pattern_utilities.input_patterns[pl]); // boolean
   auto pattern_enumeration_indices = pattern_utilities.enumeration_patterns[pl];
-  //auto pattern_aggregation_steps = pattern_utilities.aggregation_steps[pl];
+  auto pattern_aggregation_steps = pattern_utilities.aggregation_steps[pl];
   // TODO: temporary patch
   
   // TODO: remove
   uint8_t vertex_rank = 0; // dummy 
-  uint8_t edge_metadata = 0; // dummy 
+  uint8_t edge_metadata = 0; // dummy
+  uint8_t superstep_var = 0; // dummy 
   // TODO: remove
 
   uint64_t max_itr_count = std::get<2>(pattern_utilities.input_patterns[pl]);
@@ -1028,10 +1066,10 @@ void token_passing_pattern_matching(TGraph* g, VertexMetadata& vertex_metadata,
   //typedef DelegateGraphVertexDataSTDAllocator<VectorVisitor> VertexVisitorCollection;
   //VertexVisitorCollection vertex_visitors(*g);
 
-  //typedef DelegateGraphVertexDataSTDAllocator<uint64_t> VertexUint64Collection;
-  //VertexUint64Collection vertex_sequence_number(*g);
+  typedef DelegateGraphVertexDataSTDAllocator<uint64_t> VertexUint64Collection;
+  VertexUint64Collection vertex_sequence_number(*g);
 
-  struct VisitorCompare {
+  struct VisitorCompare_2 {
     public:
       // WDC_C_4#8  
       Boolean aggregation_steps [8][8] = {
@@ -1182,6 +1220,16 @@ void token_passing_pattern_matching(TGraph* g, VertexMetadata& vertex_metadata,
       }			
   }; 
 
+  struct VisitorCompare {
+    public:
+      bool operator()(const visitor_type& v1, const visitor_type& v2) const {
+        auto return_value = (v1.itr_count == v2.itr_count) && 
+          (v1.target_vertex_label == v2.target_vertex_label) && 
+          (v1.sequence_number == v2.sequence_number);   
+        return return_value; 
+      }			
+  };
+
   struct VisitorHash {
     public:
       size_t operator()(const visitor_type& visitor) const {        
@@ -1302,12 +1350,15 @@ void token_passing_pattern_matching(TGraph* g, VertexMetadata& vertex_metadata,
   // IMDB patterns_B_2
   //if (pl >= 14) {
   // WDC_patterns_12_tree_C_2, C_4 - pruned graph
-  //if (pl >= 0) {
+  if (pl >= 0) {
   //if (pl == 11) {
-  if (pl == 8) {
+  //if (pl == 8) {
     max_ranks_per_itr = mpi_size; //mpi_size; //128;
     /*if (mpi_size / 36 == 64) {
-      max_ranks_per_itr = 1; // 1; in SC paper
+      max_ranks_per_itr = 64; // 1; in SC paper
+      if (pl == 9) {
+        max_ranks_per_itr = 4; 
+      }  
     }
     if (mpi_size / 36 == 128) {
       max_ranks_per_itr = 32; // 32; in SC paper
@@ -1315,7 +1366,7 @@ void token_passing_pattern_matching(TGraph* g, VertexMetadata& vertex_metadata,
     if (mpi_size / 36 == 256) {
       max_ranks_per_itr = 256; // 256; in SC paper
     }*/
-  } else { batch_token_source_map.clear(); return;} // Test
+  } //else { batch_token_source_map.clear(); return;} // Test
   // WDC_patterns_12_D
   //if (pl >= 4) { 
   //  max_ranks_per_itr = 1; 
@@ -1392,13 +1443,15 @@ void token_passing_pattern_matching(TGraph* g, VertexMetadata& vertex_metadata,
 ///////////////////////////////////////////////////////////////////////////////
     //visitor_set_receive->clear();
     visitor_set_receive.clear();
+    vertex_sequence_number.reset(0);
     path_count = 0; // TODO: uncomment
 
     //typedef tppm_visitor_tds<TGraph, Vertex, BitSet> visitor_type;
     auto alg_data = std::forward_as_tuple(vertex_metadata, pattern, pattern_indices, vertex_rank, 
       pattern_graph, vertex_state_map, batch_token_source_map, pattern_cycle_length, pattern_valid_cycle, pattern_found, 
       edge_metadata, g, vertex_token_source_set, vertex_active, template_vertices, vertex_active_edges_map, 
-      pattern_selected_vertices, paths_result_file, pattern_enumeration_indices, visitor_set_receive);
+      pattern_selected_vertices, paths_result_file, pattern_enumeration_indices, visitor_set_receive,
+      superstep_var, vertex_sequence_number, pattern_aggregation_steps);
 
     auto vq = create_visitor_queue<visitor_type, /*havoqgt::detail::visitor_priority_queue*/tppm_queue>(g, alg_data);
 
@@ -1515,4 +1568,4 @@ void token_passing_pattern_matching(TGraph* g, VertexMetaData& vertex_metadata,
 
 }} //end namespace havoqgt::mpi
 
-#endif //HAVOQGT_TOKEN_PASSING_PATTERN_MATCHING_NONUNIQUE_TDS_BATCH_3_HPP_INCLUDED
+#endif //HAVOQGT_TOKEN_PASSING_PATTERN_MATCHING_NONUNIQUE_TDS_BATCH_4_HPP_INCLUDED

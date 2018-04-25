@@ -114,6 +114,38 @@ class pattern_util {
       //}
     } 
 
+    pattern_util(std::string pattern_input_filename, 
+      std::string pattern_enumeration_input_filename, 
+      std::string pattern_aggregation_input_filename,
+      bool is_integral_type, bool is_enumeration) :
+      input_pattern_path_length(0),
+      input_pattern(0),
+      all_patterns(0),
+      one_path_patterns(0),
+      two_path_patterns(0),
+      enumeration_patterns(0),
+      aggregation_steps(0),
+      join_vertices(0) {
+
+      //std::cout << "Reading the input pattern list ..." << std::endl;
+      read_pattern_list(pattern_input_filename, is_integral_type);
+      if (is_enumeration) { 
+        //read_pattern_enumeration_list(pattern_enumeration_input_filename, is_integral_type);  
+        //read_pattern_enumeration_list_2(pattern_enumeration_input_filename, is_integral_type);
+        read_pattern_enumeration_list_3(pattern_enumeration_input_filename, is_integral_type);
+        read_pattern_aggregation_list_3(pattern_aggregation_input_filename, is_integral_type); 
+      }
+   
+      //std::cout << "Pattrens to search ..." << std::endl;
+      //for (auto ip : input_patterns) {
+        //std::cout << "Data: " << std::endl; 
+        //output_pattern(std::get<0>(ip));
+        //std::cout << "Indices: " << std::endl;
+        //output_pattern(std::get<1>(ip));               
+        //std::cout << std::endl; 
+      //}
+    } 
+
     ~pattern_util() {
     }
   
@@ -243,6 +275,50 @@ class pattern_util {
         }    
       }
       pattern_enumeration_input_file.close();
+    } 
+
+    void read_pattern_enumeration_list_3(std::string pattern_enumeration_input_filename,
+      bool is_integral_type) {
+      std::ifstream pattern_enumeration_input_file(pattern_enumeration_input_filename,
+        std::ifstream::in);
+      std::string line;  
+      while (std::getline(pattern_enumeration_input_file, line)) {
+        //std::cout << line << std::endl;   
+        boost::trim(line); // important 
+
+	std::istringstream iss(line);
+
+        auto tokens = split(line, ':');
+        assert(tokens.size() > 2); 	   
+
+        //boost::trim(tokens[0]); // important  
+        boost::trim(tokens[1]); // important
+        boost::trim(tokens[2]); // important 
+
+        if (is_integral_type) {
+          enumeration_patterns.push_back(split<Vertex>(tokens[1], ' ')); 
+          //aggregation_steps.push_back(split<uint8_t>(tokens[2], ' ')); 
+        }    
+      }
+      pattern_enumeration_input_file.close();
+    } 
+
+    void read_pattern_aggregation_list_3(std::string pattern_aggregation_input_filename, 
+      bool is_integral_type) {
+      std::ifstream pattern_aggregation_input_file(pattern_aggregation_input_filename,
+        std::ifstream::in);
+      std::string line;  
+      while (std::getline(pattern_aggregation_input_file, line)) {
+        //std::cout << line << std::endl;   
+        boost::trim(line); // important 
+
+	std::istringstream iss(line);        
+
+        if (is_integral_type) {
+          aggregation_steps.push_back(split<uint8_t>(line, ' ')); 
+        }    
+      }
+      pattern_aggregation_input_file.close();
     } 
 
     void read_pattern_input(std::string pattern_input_filename) {

@@ -109,7 +109,7 @@ class pattern_graph_csr {
 //      output_graph_stat(); 
     }
 
-    pattern_graph_csr(size_t mpi_rank, std::string edge_input_filename, std::string vertex_input_filename,
+    /*pattern_graph_csr(size_t mpi_rank, std::string edge_input_filename, std::string vertex_input_filename,
       std::string vertex_data_input_filename,
       std::string edge_data_input_filename,
       std::string stat_input_filename,
@@ -167,7 +167,7 @@ class pattern_graph_csr {
       read_vertex_data_list(vertex_data_input_filename);
       read_stat(stat_input_filename);
       
-    }
+    }*/
 
     ~pattern_graph_csr() {
 //      std::cout << "Disposing graph ... " << std::endl;
