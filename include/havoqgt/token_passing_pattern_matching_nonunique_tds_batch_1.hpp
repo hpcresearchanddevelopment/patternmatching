@@ -1152,17 +1152,17 @@ void token_passing_pattern_matching(TGraph* g, VertexMetadata& vertex_metadata,
 
   // IMDB patterns_B_2
   //if (pl >= 14) {
-  // WDC_patterns_12_tree_C_2 - pruned graph
+  // WDC_patterns_12_tree_C_2, C_4 - pruned graph
   if (pl >= 0) {
-    max_ranks_per_itr = mpi_size;
+    max_ranks_per_itr = mpi_size; //128;
     /*if (mpi_size / 36 == 64) {
-      max_ranks_per_itr = 1;
+      max_ranks_per_itr = 1; // 1; in SC paper
     }
     if (mpi_size / 36 == 128) {
-      max_ranks_per_itr = 32;
+      max_ranks_per_itr = 32; // 32; in SC paper
     }
     if (mpi_size / 36 == 256) {
-      max_ranks_per_itr = 256;
+      max_ranks_per_itr = 256; // 256; in SC paper
     }*/
   }
   // WDC_patterns_12_D
